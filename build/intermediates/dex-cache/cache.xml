@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/macmini/.gradle/caches/modules-2/files-2.1/com.parse/parse-android/1.11.0/6592129dec2caa8791d322c7e4b6b7a30e8eadae/parse-android-1.11.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="6592129dec2caa8791d322c7e4b6b7a30e8eadae">
+        <dex dex="/Users/macmini/AndroidStudioProjects/Infodroid/app/build/intermediates/pre-dexed/debug/parse-android-1.11.0-166878dfd71e2ff76ba9a1c3934ebff179cfc98b.jar" />
+    </item>
+    <item
+        jar="/Users/macmini/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-applinks/1.3.0/bc535105332645408ef5f1380215cc954b842178/bolts-applinks-1.3.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="bc535105332645408ef5f1380215cc954b842178">
+        <dex dex="/Users/macmini/AndroidStudioProjects/Infodroid/app/build/intermediates/pre-dexed/debug/bolts-applinks-1.3.0-1234991a4d62ebfc660c8c434173ea6becdb196b.jar" />
+    </item>
+    <item
+        jar="/Users/macmini/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-tasks/1.3.0/8a62fd16fcc1c06f284fc98e6cbded2a5af1dd4c/bolts-tasks-1.3.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="8a62fd16fcc1c06f284fc98e6cbded2a5af1dd4c">
+        <dex dex="/Users/macmini/AndroidStudioProjects/Infodroid/app/build/intermediates/pre-dexed/debug/bolts-tasks-1.3.0-d7a183e8a848743d80ad5c26094fca007ff3d68e.jar" />
+    </item>
+
+</items>
