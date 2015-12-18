@@ -1,18 +1,20 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
-    tools:context="fragment.HealthnewsFragment">
+    android:background="#cccc"
+    tools:context="fragment.AllNewsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="saugatligal"
-        />
+
+
 
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/news_listview"
-        android:layout_gravity="center" />
+        android:divider="#424242"
+        android:layout_gravity="center"
+        android:dividerHeight="14.0sp"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true"/>
 
 </FrameLayout>

@@ -1,13 +1,16 @@
 package fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.volley.Request;
@@ -15,16 +18,27 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.saugatligal.infodroid.FullNewsActivity;
 import com.saugatligal.infodroid.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import adapter.NewsAdapter;
+import apptext.AppText;
 import model.News;
 import utilities.GlobalClass;
 
@@ -74,7 +88,11 @@ public class HealthnewsFragment extends android.support.v4.app.Fragment {
 
     public HealthnewsFragment() {
         // Required empty public constructor
+
     }
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,8 +109,22 @@ public class HealthnewsFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
        View view = inflater.inflate(R.layout.fragment_healthnews, container, false);
         newsList = (ListView)view.findViewById(R.id.news_listview);
-        newsAdapter = new NewsAdapter(getActivity(),newsArrayList);
-        newsList.setAdapter(newsAdapter);
+
+        RetrieveFeeds feeds = new RetrieveFeeds();
+        feeds.execute();
+
+        newsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(getActivity(), FullNewsActivity.class);
+                i.putExtra("title",newsArrayList.get(position).getNewsTitle());
+                i.putExtra("newsurl",newsArrayList.get(position).getNewsUrl());
+                i.putExtra("newsDescription",newsArrayList.get(position).getDescription());
+                i.putExtra("imageurl",newsArrayList.get(position).getImageUrl());
+                startActivity(i);
+            }
+        });
+
 return view;
     }
 
@@ -117,8 +149,7 @@ return view;
         String url = "https://www.kimonolabs.com/api/37m80m76?apikey=1BUuF7TLyOcPd7RrjGDh0G43fGaYpaPV";
 
 
-
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+        /*JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 url,
                 new Response.Listener<JSONObject>() {
 
@@ -169,7 +200,7 @@ return view;
         });
 
 // Adding request to request queue
-        GlobalClass.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+        GlobalClass.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);*/
 
 
     }
@@ -178,6 +209,7 @@ return view;
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        newsArrayList.clear();
     }
 
     /**
@@ -193,6 +225,88 @@ return view;
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    public class RetrieveFeeds extends AsyncTask {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            newsArrayList.clear();
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            try {
+
+                URL url = new URL(mParam1);
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                DocumentBuilder db = dbf.newDocumentBuilder();
+                Document doc = db.parse(new InputSource(url.openStream()));
+                doc.getDocumentElement().normalize();
+
+                NodeList nodeList = doc.getElementsByTagName("item");
+
+                /** Assign textview array lenght by arraylist size */
+                //   name = new TextView[nodeList.getLength()];
+                //   website = new TextView[nodeList.getLength()];
+                //  category = new TextView[nodeList.getLength()];
+
+                for (int i = 0; i < nodeList.getLength(); i++) {
+
+                    Node node = nodeList.item(i);
+
+
+                    Element fstElmnt = (Element) node;
+                    NodeList nameList = fstElmnt.getElementsByTagName("title");
+                    Element nameElement = (Element) nameList.item(0);
+                    nameList = nameElement.getChildNodes();
+
+
+
+                    Element secondElement = (Element) node;
+                    NodeList imageurl = secondElement.getElementsByTagName("media:content");
+                    Element imageElement = (Element) imageurl.item(0);
+                   // nameList = imageElement.getChildNodes();
+
+                    Element secondElement1 = (Element) node;
+                    NodeList nodeDescription = secondElement1.getElementsByTagName("description");
+                    Element newsDescription = (Element) nodeDescription.item(0);
+                    nodeDescription = newsDescription.getChildNodes();
+
+                    Element secondElement2= (Element) node;
+
+                     NodeList newsUrl = secondElement2.getElementsByTagName("link");
+                    Element newsUrlElement = (Element) newsUrl.item(0);
+                    newsUrl = newsUrlElement.getChildNodes();
+
+                    String description = ( (Node)nodeDescription.item(0)).getNodeValue();
+                    String imageUrl = imageElement.getAttribute("url");
+                    String newsTitle = ( (Node)nameList.item(0)).getNodeValue();
+                    String newsLinkUrl = ( (Node)newsUrl.item(0)).getNodeValue();
+                    Log.d("fulldata",description +" "+ newsLinkUrl);
+                    news= new News(newsTitle,imageUrl,description,newsLinkUrl);
+                    newsArrayList.add(news);
+
+                }
+
+            } catch (Exception e) {
+                System.out.println("XML Pasing Excpetion = " + e);
+                Log.e("MESSAGE", e.toString());
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+            newsAdapter = new NewsAdapter(getActivity(),newsArrayList);
+            newsList.setAdapter(newsAdapter);
+        }
     }
 
 }

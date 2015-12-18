@@ -15,55 +15,77 @@
       IMPORTANT: Change "com.parse.starter.permission.C2D_MESSAGE" in the lines below
       to match your app's package name + ".permission.C2D_MESSAGE".
     -->
-    <permission android:protectionLevel="signature"
-        android:name="com.saugatligal.infodroid.permission.C2D_MESSAGE" />
+    <permission
+        android:name="com.saugatligal.infodroid.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="com.saugatligal.infodroid.permission.C2D_MESSAGE" />
 
     <application
         android:name="utilities.GlobalClass"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
+
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <service android:name="com.parse.PushService" />
-        <receiver android:name="com.parse.ParsePushBroadcastReceiver"
-            android:exported="false">
+
+        <receiver
+            android:name="com.parse.ParsePushBroadcastReceiver"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
                 <action android:name="com.parse.push.intent.DELETE" />
                 <action android:name="com.parse.push.intent.OPEN" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <!--
-                  IMPORTANT: Change "com.parse.starter" to match your app's package name.
-                -->
+                <!-- IMPORTANT: Change "com.parse.starter" to match your app's package name. -->
                 <category android:name="com.saugatligal.infodroid" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.saugatligal.infodroid.ParseBroadcastReceiver"
-            android:exported="false"
-            android:enabled="true">
+            android:name=".ParseBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.example.package.MESSAGE" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".FullNewsActivity"
+            android:label="@string/title_activity_full_news" >
+        </activity>
+        <activity
+            android:name=".WebviewComplete"
+            android:label="@string/title_activity_webview_complete" >
+        </activity>
+        <activity
+            android:name=".SplashActivity"
+
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Aboutus"
+            android:label="@string/title_activity_aboutus" >
+        </activity>
     </application>
 
 </manifest>

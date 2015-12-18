@@ -9,18 +9,27 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-
+import apptext.AppText;
 import fragment.HealthnewsFragment;
 import fragment.SportnewsFragment;
 import transforms.*;
+import utilities.GlobalClass;
 
 
 /**
@@ -45,6 +54,8 @@ public class MainNewsFragment extends android.support.v4.app.Fragment {
     private ViewPager mPager;
     private PageAdapter mAdapter;
     private static final ArrayList<TransformerItem> TRANSFORM_CLASSES;
+    TextView titleText;
+    String[] title = {"WORLD NEWS","SPORTS NEWS","ENTERTAINMENT","FEMAIL","SCIENCE AND TECHNOLOGY","HEALTH NEWS"};
     static {
         TRANSFORM_CLASSES = new ArrayList<>();
         TRANSFORM_CLASSES.add(new TransformerItem(DefaultTransformer.class));
@@ -103,12 +114,19 @@ public class MainNewsFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View hiddenInfo = inflater.inflate(R.layout.fragment_main_news, container, false);
 
-
+        titleText = (TextView) hiddenInfo.findViewById(R.id.title_text_id);
         mPager = (ViewPager) hiddenInfo.findViewById(R.id.fragmentcontainer);
 
 
 
+        AdView mAdView = (AdView)hiddenInfo.findViewById(R.id.adView);
 
+      //  mAdView.setAdSize(AdSize.BANNER);
+      //  AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice(GlobalClass.getInstance().getDeviceId())
+                .build());
 
 
         //  return inflater.inflate(R.layout.fragment_main_news, container, false);
@@ -145,7 +163,13 @@ public class MainNewsFragment extends android.support.v4.app.Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
 // TODO Auto-generated method stub
         super.onViewCreated(view, savedInstanceState);
-        setupViewPager(mPager);
+        if(GlobalClass.getInstance().isConnectingToInternet()){
+            setupViewPager(mPager);
+        }else{
+            titleText.setText("NO INTERNET CONNECTION");
+            Toast.makeText(getActivity(),"No internet connection",Toast.LENGTH_LONG).show();
+        }
+
 
     }
 
@@ -164,23 +188,7 @@ public class MainNewsFragment extends android.support.v4.app.Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
-    public static class PlaceholderFragment extends android.support.v4.app.Fragment {
 
-        private static final String EXTRA_POSITION = "EXTRA_POSITION";
-        private static final int[] COLORS = new int[] { 0xFF33B5E5, 0xFFAA66CC, 0xFF99CC00, 0xFFFFBB33, 0xFFFF4444 };
-        View textViewPosition;
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            final int position = getArguments().getInt(EXTRA_POSITION);
-            textViewPosition    = inflater.inflate(R.layout.fragment_main, container, true);
-
-
-            textViewPosition.setBackgroundColor(COLORS[1]);
-
-            return textViewPosition;
-        }
-
-    }
 
     private static final class PageAdapter extends FragmentPagerAdapter {
         List<android.support.v4.app.Fragment> fragmentList = new ArrayList<>();
@@ -232,12 +240,34 @@ public class MainNewsFragment extends android.support.v4.app.Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
         PageAdapter viewPagerAdapter = new PageAdapter(getChildFragmentManager());
-        viewPagerAdapter.addFragment(new HealthnewsFragment(), "Top Tracks");
-        viewPagerAdapter.addFragment(new SportnewsFragment(), "World Charts");
-        viewPagerAdapter.addFragment(new HealthnewsFragment(), "Top Tracks");
-        viewPagerAdapter.addFragment(new SportnewsFragment(), "World Charts");
-        viewPagerAdapter.addFragment(new HealthnewsFragment(), "Top Tracks");
-        viewPagerAdapter.addFragment(new SportnewsFragment(), "World Charts");
+
+
+
+        viewPagerAdapter.addFragment(HealthnewsFragment.newInstance(AppText.worldNewsLink,"World News"),"");
+        viewPagerAdapter.addFragment(HealthnewsFragment.newInstance(AppText.worldSportsLink,"Sports News"),"");
+        viewPagerAdapter.addFragment(HealthnewsFragment.newInstance(AppText.worldEntertainmentLink,"Entertainment News"),"");
+        viewPagerAdapter.addFragment(HealthnewsFragment.newInstance(AppText.worldFemailLink,"Femail News"),"");
+        viewPagerAdapter.addFragment(HealthnewsFragment.newInstance(AppText.worldScienceLink,"Science News"),"");
+        viewPagerAdapter.addFragment(HealthnewsFragment.newInstance(AppText.worldHealthLink,"Health News"),"");
+
+
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                titleText.setText(title[position]);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         try {
             mPager.setPageTransformer(true, TRANSFORM_CLASSES.get(13).clazz.newInstance());
         } catch (java.lang.InstantiationException e) {

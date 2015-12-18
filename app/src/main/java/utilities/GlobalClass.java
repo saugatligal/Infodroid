@@ -1,6 +1,10 @@
 package utilities;
 
 import android.app.Application;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.provider.Settings;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -80,4 +84,29 @@ public class GlobalClass extends Application {
             mRequestQueue.cancelAll(tag);
         }
     }
+
+public String getDeviceId() {
+
+    String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+
+    return id;
+}
+
+
+    public boolean isConnectingToInternet(){
+        ConnectivityManager connectivity = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null)
+        {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                    {
+                        return true;
+                    }
+
+        }
+        return false;
+    }
+
 }

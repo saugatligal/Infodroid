@@ -64,17 +64,16 @@ public class NewsAdapter  extends BaseAdapter{
         image = (ImageView)convertView.findViewById(R.id.image_news);
         title = (TextView)convertView.findViewById(R.id.main_news);
 
-        //your image url
-        String url = "http://javatechig.com/wp-content/uploads/2014/05/UniversalImageLoader-620x405.png";
+
 
         title.setText(newsArrayList.get(position).getNewsTitle());
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true)
                 .cacheOnDisc(true).resetViewBeforeLoading(true)
-                .showImageForEmptyUri(R.drawable.ic_drawer)
-                .showImageOnFail(R.drawable.ic_drawer)
-                .showImageOnLoading(R.drawable.ic_drawer).build();
+                .showImageForEmptyUri(R.mipmap.logo)
+                .showImageOnFail(R.mipmap.logo)
+                .showImageOnLoading(R.mipmap.logo).build();
 
 
 
